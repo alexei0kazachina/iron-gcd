@@ -19,6 +19,7 @@ fn post_gcd(request: &mut Request) -> IronResult<Response> {
 		let form_data = match request.get_ref::<UrlEncodedBody>() {
 				Err(e) => {
 						response.set_mut(status::BadRequest);
+						response.set_mut(mime!(Text/Html; Charset=Utf8));
 						response.set_mut(format!("Ошибка при разборе данных формы: {:?}\n", e));
 						return Ok(response);
 				}
@@ -27,6 +28,7 @@ fn post_gcd(request: &mut Request) -> IronResult<Response> {
 		let unparsed_numbers = match form_data.get("n") {
 				None => {
 						response.set_mut(status::BadRequest);
+						response.set_mut(mime!(Text/Html; Charset=Utf8));
 						response.set_mut(format!("данные формы не имеют 'n' параметр\n"));
 						return Ok(response);
 				}
@@ -37,6 +39,7 @@ fn post_gcd(request: &mut Request) -> IronResult<Response> {
 					match u64::from_str(&unparsed) {
 							Err(_) => {
 									response.set_mut(status::BadRequest);
+									response.set_mut(mime!(Text/Html; Charset=Utf8));
 									response.set_mut(
 											format!("Значение для параметра 'n' не является числом: {:?}\n",
 											
@@ -75,7 +78,7 @@ fn get_form(_request: &mut Request) -> IronResult<Response> {
 	response.set_mut(status::Ok);
 	response.set_mut(mime!(Text/Html; Charset=Utf8));
 	response.set_mut(r#"
-			<title>Вычислитель НОД</title>
+			<title>Вычислитель НОД наибольший общий делитель</title>
 			<form action="/gcd" method="post">
 				<input type="text" name="n"/>
 				<input type="text" name="n"/>
